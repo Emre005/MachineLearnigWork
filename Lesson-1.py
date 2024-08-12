@@ -4,6 +4,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
 import pandas as pd
 # Veri seti incelemesi
@@ -57,14 +58,24 @@ KNN :Hyyper parameter = K
         
 
 """
-k=10
-knn= KNeighborsClassifier(n_neighbors=k)
-knn.fit(X_train,y_train)
-y_prep = knn.predict(X_test)
-accuracy = accuracy_score(y_test, y_prep)
-print(accuracy)
+accuracy_values = [ ]
+k_values = [ ]
+for k in range(1,21):
+    knn= KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train,y_train)
+    y_prep = knn.predict(X_test)
+    accuracy = accuracy_score(y_test, y_prep)
+    accuracy_values.append(accuracy)
+    k_values.append(k)
+  
 
-
+plt.figure()
+plt.plot(k_values, accuracy_values,marker = "o",linestyle = "-")
+plt.title("K degerine göre doğruluk")
+plt.xlabel("k degeri")
+plt.ylabel("Dogruluk")
+plt.xticks(k_values)
+plt.grid(True)
 
 
 
