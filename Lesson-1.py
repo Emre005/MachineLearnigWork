@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test= train_test_split(X,y,test_size = 0.3, random_s
 #olceklendirme
 
 scaller= StandardScaler()
-scaller.fit_transform(X_train)
+X_train = scaller.fit_transform(X_train)
 X_test = scaller.transform(X_test)
 
 
@@ -48,4 +48,46 @@ print("Doğruluk:",accuracy)
 conf_matrix = confusion_matrix(y_test,y_predict)
 print("confusion_matrix:")
 print(conf_matrix)
-#
+#Hiper Parametre ayarlaması
+
+"""
+KNN :Hyyper parameter = K
+    K:1,2,3 ...N
+    Accuracy: %A, %B ...
+        
+
+"""
+k=10
+knn= KNeighborsClassifier(n_neighbors=k)
+knn.fit(X_train,y_train)
+y_prep = knn.predict(X_test)
+accuracy = accuracy_score(y_test, y_prep)
+print(accuracy)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
