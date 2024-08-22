@@ -37,4 +37,11 @@ plot_tree(tree_clf, filled=True, feature_names=iris.feature_names,class_names=li
 plt.show()
 
 
-feature_importance = tree_clf.feature_importances_
+feature_importances = tree_clf.feature_importances_
+    
+feature_names = iris.feature_names
+
+feature_importances_sorted = sorted(zip(feature_importances,feature_names), reverse=True)
+
+for importance, feature_name in feature_importances_sorted:
+    print(f"{feature_name}:{importance}")

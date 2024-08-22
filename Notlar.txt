@@ -1,0 +1,126 @@
+Tabii ki! Kodun tamamını meyve sınıflandırma örneğiyle anlatayım.
+
+### 1. Kütüphaneleri Yükleme
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+import matplotlib.pyplot as plt
+```
+
+- **Açıklama:** İlk olarak, gerekli araçları (kütüphaneleri) içeri aktarıyoruz. Bu araçlar, modelimizi eğitmek, test etmek, doğruluğunu hesaplamak ve sonuçları görselleştirmek için gereklidir.
+- **Örnek:** Bu, meyve sınıflandırma işlemimizdeki çeşitli araçları, örneğin meyveleri ayırmak için bıçakları, doğruluğu ölçmek için cetveli ve sonuçları kaydetmek için defteri hazırlamak gibidir.
+
+### 2. Veri Setini Yükleme
+
+```python
+iris = load_iris()
+```
+
+- **Açıklama:** Burada, Iris veri setini yüklüyoruz. Bu veri seti, meyve örneklerimizin bir listesi gibidir. Hangi özelliklere sahip olduklarını (renk, kabuk sertliği gibi) ve hangi tür meyve olduklarını içerir.
+- **Örnek:** Tıpkı bir meyve sepetini alıp içindeki meyveleri tanımak gibi, burada da veri setini alıp incelemeye başlıyoruz.
+
+### 3. Özellikler ve Hedefleri Ayrıştırma
+
+```python
+X = iris.data # features
+y = iris.target # target
+```
+
+- **Açıklama:** Burada, meyvelerin özelliklerini (`X`) ve hangi tür meyve olduklarını (`y`) ayırıyoruz. `X` meyvelerin özelliklerini (renk, kabuk sertliği, şekil) içerirken, `y` her meyvenin hangi tür olduğunu (elma, portakal, muz) belirtir.
+- **Örnek:** Tıpkı meyveleri elimize alıp "Bu kırmızı bir elma, bu turuncu bir portakal" diyerek özelliklerini ve türlerini not almak gibi.
+
+### 4. Veri Setini Eğitim ve Test Olarak Bölme
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+- **Açıklama:** Burada, meyve örneklerimizi ikiye bölüyoruz: eğitim için kullanacağımız kısmı (`X_train`, `y_train`) ve modelimizi test edeceğimiz kısmı (`X_test`, `y_test`).
+  - `test_size=0.2`: Meyvelerin %20'sini test etmek için ayırıyoruz, geri kalan %80'i ile modeli eğitiyoruz.
+- **Örnek:** Tıpkı bazı meyveleri çocuklara öğretmek için kullanmak ve geri kalan birkaçını çocuklara sınav yapmak için saklamak gibi.
+
+### 5. Karar Ağacı Modelini Oluşturma ve Eğitme
+
+```python
+tree_clf = DecisionTreeClassifier(criterion='entropy', max_depth=5, random_state=42)
+tree_clf.fit(X_train, y_train)
+```
+
+- **Açıklama:** 
+  - Burada bir Karar Ağacı modeli oluşturuyoruz. Bu ağaç, meyveleri sınıflandırmak için sorular sorarak dallara ayrılacak.
+  - `fit(X_train, y_train)`: Bu komut, modeli eğitir. Yani, ağacımız, meyvelerin özelliklerine bakarak hangi tür olduklarını nasıl anlayacağını öğrenir.
+- **Örnek:** Çocuğa meyvelerin özelliklerini gösterip, "Bu turuncu, o zaman portakal; bu kırmızı ve sert, o zaman elma" gibi kurallar öğretiyoruz. Çocuk bu kuralları öğrenerek yeni meyveleri tanıyabilecek hale gelir.
+
+### 6. Modeli Test Etme
+
+```python
+y_pred = tree_clf.predict(X_test)
+```
+
+- **Açıklama:** Bu satırda, eğitilmiş modelimizi (çocuğumuzu) test ediyoruz. Ona hiç görmediği meyveleri gösteriyoruz ve türlerini tahmin etmesini istiyoruz.
+- **Örnek:** Çocuğa daha önce göstermediğimiz bir meyve verip "Bu nedir?" diye sormak gibi. Çocuk, öğrendiği bilgilere dayanarak tahmin yapar.
+
+### 7. Modelin Doğruluğunu Ölçme
+
+```python
+accuracy = accuracy_score(y_test, y_pred)
+print("iris veri seti ile egitilen DT modeli doğruluğu: ", accuracy)
+```
+
+- **Açıklama:** Burada, modelin (çocuğun) ne kadar doğru tahminler yaptığını ölçüyoruz. `accuracy_score` ile modelin doğruluk oranını hesaplıyoruz.
+- **Örnek:** Çocuk 10 meyve verdiğimizde 8 tanesini doğru tahmin ediyorsa, doğruluğu %80 olur. Burada da benzer şekilde modelin doğruluğunu hesaplıyoruz.
+
+### 8. Karışıklık Matrisini Hesaplama
+
+```python
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("conf_matrix")
+print(conf_matrix)
+```
+
+- **Açıklama:** Bu bölümde, modelin hangi tür meyvelerde hata yaptığını incelemek için bir karışıklık matrisi oluşturuyoruz. Bu matris, modelin hangi tür meyveleri karıştırdığını gösterir.
+- **Örnek:** Çocuğun elma yerine portakal dediği kaç tane örnek olduğunu görmek gibi. Bu matris, hataların detaylarını anlamamıza yardımcı olur.
+
+### 9. Karar Ağacını Görselleştirme
+
+```python
+plt.figure(figsize=(15,10))
+plot_tree(tree_clf, filled=True, feature_names=iris.feature_names, class_names=list(iris.target_names))
+plt.show()
+```
+
+- **Açıklama:** Bu adımda, karar ağacımızı (modelimizi) bir grafik olarak çizdiriyoruz. Bu grafik, modelin hangi soruları sorduğunu ve bu sorulara göre nasıl kararlar verdiğini gösterir.
+- **Örnek:** Çocuğun "Bu turuncu mu? Evetse portakal" gibi sorular sorduğunu bir kağıda çizmek gibi. Ağaç dallarını görselleştirerek nasıl kararlar verdiğini görebiliriz.
+
+### 10. Özellik Önemlerini Hesaplama
+
+```python
+feature_importances = tree_clf.feature_importances_
+    
+feature_names = iris.feature_names
+```
+
+- **Açıklama:** Burada, modelin hangi özelliklere (renk, şekil vb.) daha fazla önem verdiğini hesaplıyoruz.
+- **Örnek:** Çocuğun meyveleri tanırken en çok hangi özelliklere dikkat ettiğini (örneğin, rengine mi yoksa şekline mi) anlamak gibi. Bu, modelin hangi özelliklerle karar verdiğini anlamamıza yardımcı olur.
+
+### 11. Özellik Önemlerini Sıralama ve Yazdırma
+
+```python
+feature_importances_sorted = sorted(zip(feature_importances, feature_names), reverse=True)
+
+for importance, feature_name in feature_importances_sorted:
+    print(f"{feature_name}: {importance}")
+```
+
+- **Açıklama:** 
+  - Bu adımda, modelin en önemli bulduğu özellikleri sıraya koyuyoruz ve bunları ekrana yazdırıyoruz.
+- **Örnek:** Çocuğun en çok hangi özelliklere (renk, kabuk sertliği vb.) dikkat ettiğini listelemek gibi. Hangi özelliklerin çocuğun karar vermesinde daha etkili olduğunu görebiliriz.
+
+---
+
+### Özet:
+Bu kodda, tıpkı bir çocuğa meyveleri tanıtıp sonra ona sınav yapmak gibi, bir Karar Ağacı modelini Iris veri setiyle eğitiyor ve sonra test ediyoruz. Karar Ağacı, her meyvenin özelliklerine göre hangi türe ait olduğunu öğreniyor ve yeni meyveleri doğru sınıflandırıp sınıflandıramadığını değerlendiriyoruz. Kodun sonunda, hangi özelliklerin modelin karar vermesinde daha önemli olduğunu da görüyoruz.
